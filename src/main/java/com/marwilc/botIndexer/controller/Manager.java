@@ -162,18 +162,18 @@ public class Manager
 	 */
 	public void initEventAddFileAccounts()
 	{
-		// TODO Auto-generated method stub
-		openExcelFile();
+		accounts = openExcelFile();
 		
-
 	}
 
 	/**
 	 * abre una ventana nueva con la interfaz para abrir un archivo excel
+	 * @return 
 	 */
-	private void openExcelFile()
+	private ArrayList<String> openExcelFile()
 	{
 		// TODO Auto-generated method stub
+		ArrayList<String> arrayList = new ArrayList<>();
 		FileDialog dialogoArchivo; 
 		File excelFile;
 		InputStream excelStream = null;
@@ -192,13 +192,16 @@ public class Manager
 			XSSFSheet sheet = workbook.getSheetAt(0);
 			Iterator<Row> rowIterator = sheet.iterator();
 			   
+			// lee las filas del archivo excel
 			while (rowIterator.hasNext()) {
 			   Row row = rowIterator.next();
 			   Iterator<Cell> cellIterator = row.cellIterator();
 			   while (cellIterator.hasNext()) {
 				   Cell cell = cellIterator.next();
-				   switch (cell.getCellTypeEnum()) {
+				   switch (cell.getCellType()) {
 					   case Cell.CELL_TYPE_STRING:
+						   // agrega las cuentas al arraylist
+						   arrayList.add(cell.getStringCellValue());
 						   System.out.print(cell.getStringCellValue() + "(String)\t");
 						   break;   
 				   }  
@@ -206,12 +209,14 @@ public class Manager
 			   System.out.println("");
 			   }
 			excelStream.close();
+			workbook.close();
 		} catch (FileNotFoundException e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO: handle exception
 			e.printStackTrace();
-		}	
+		}
+		return arrayList; 
 	}
 }
